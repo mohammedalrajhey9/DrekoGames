@@ -117,13 +117,13 @@ type DownloadItem = {
 }
 
 const navItems: Array<{ label: NavKey; icon: string }> = [
-  { label: 'Home', icon: '/home.svg' },
-  { label: 'Store', icon: '/store.svg' },
-  { label: 'Library', icon: '/library.svg' },
-  { label: 'Downloads', icon: '/downloads.svg' },
-  { label: 'Profile', icon: '/profile.svg' },
-  { label: 'Community', icon: '/community.svg' },
-  { label: 'Settings', icon: '/settings.svg' },
+  { label: 'Home', icon: './home.svg' },
+  { label: 'Store', icon: './store.svg' },
+  { label: 'Library', icon: './library.svg' },
+  { label: 'Downloads', icon: './downloads.svg' },
+  { label: 'Profile', icon: './profile.svg' },
+  { label: 'Community', icon: './community.svg' },
+  { label: 'Settings', icon: './settings.svg' },
 ]
 
 const toDisplayName = (email: string) => email.split('@')[0].replace(/[._-]/g, ' ')
