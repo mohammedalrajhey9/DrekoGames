@@ -48,11 +48,46 @@ const sendStatus = (mainWindow) => {
   } catch {}
 }
 
+let updaterScheduled = false
+let updaterListenersAttached = false
+
+const triggerUpdateCheck = (mainWindow, force = false) => {
+  if (!mainWindow || mainWindow.isDestroyed()) return Promise.resolve(getUpdateState())
+
+  if (!force && updaterScheduled) {
+    return Promise.resolve(getUpdateState())
+  }
+
+  updaterScheduled = true
+  setUpdateState({ checking: true, available: false, downloaded: false, error: '' })
+  sendStatus(mainWindow)
+
+  return new Promise((resolve) => {
+    const delayMs = force ? 600 : 8000
+    setTimeout(() => {
+      autoUpdater.checkForUpdatesAndNotify()
+        .then(() => resolve(getUpdateState()))
+        .catch((error) => {
+          setUpdateState({ checking: false, available: false, downloaded: false, error: sanitizeUpdateError(error) })
+          sendStatus(mainWindow)
+          resolve(getUpdateState())
+        })
+    }, delayMs)
+  })
+}
+
 const setupAutoUpdater = (mainWindow) => {
   autoUpdater.autoDownload = true
   autoUpdater.autoInstallOnAppQuit = true
   autoUpdater.disableWebInstaller = false
   autoUpdater.forceDevUpdateConfig = false
+
+  if (updaterListenersAttached) {
+    triggerUpdateCheck(mainWindow)
+    return
+  }
+
+  updaterListenersAttached = true
 
   autoUpdater.on('checking-for-update', () => {
     setUpdateState({ checking: true, available: false, downloaded: false, error: '' })
@@ -104,10 +139,11 @@ const setupAutoUpdater = (mainWindow) => {
     } catch {}
   })
 
-  autoUpdater.checkForUpdatesAndNotify().catch((error) => {
-    setUpdateState({ checking: false, available: false, downloaded: false, error: sanitizeUpdateError(error) })
-    sendStatus(mainWindow)
-  })
+  triggerUpdateCheck(mainWindow)
 }
 
-module.exports = { setupAutoUpdater, getUpdateState: () => updateState }
+module.exports = {
+  setupAutoUpdater,
+  triggerUpdateCheck,
+  getUpdateState: () => updateState,
+}

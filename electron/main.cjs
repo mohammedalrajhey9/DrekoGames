@@ -3,7 +3,7 @@ const path = require('path')
 const fs = require('fs')
 const { execFile } = require('child_process')
 const { finished } = require('stream').promises
-const { setupAutoUpdater, getUpdateState } = require('./updater.cjs')
+const { setupAutoUpdater, triggerUpdateCheck, getUpdateState } = require('./updater.cjs')
 
 const distIndexPath = path.join(__dirname, '../dist/index.html')
 const hasBuiltApp = fs.existsSync(distIndexPath)
@@ -1005,6 +1005,9 @@ ipcMain.handle('open-external', async (_, targetUrl) => {
 
 ipcMain.handle('check-for-app-updates', async () => {
   try {
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      await triggerUpdateCheck(mainWindow, true)
+    }
     return getUpdateState()
   } catch {
     return { checking: false, available: false, downloaded: false, error: 'Update check unavailable' }

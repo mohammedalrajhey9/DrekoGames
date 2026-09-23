@@ -1,7 +1,7 @@
 {
   "name": "drekogames-launcher",
   "private": true,
-  "version": "1.0.7",
+  "version": "1.0.9",
   "description": "Dreko Games Launcher - desktop game hub and installer",
   "author": {
     "name": "Dreko Games",
@@ -24,7 +24,7 @@
     "electron:package": "npm run build && electron-builder --win --publish never",
     "electron:release": "npm run build && electron-builder --win --publish always",
     "release:github": "npm run build && electron-builder --win --publish always",
-    "installer:build": "powershell -NoProfile -ExecutionPolicy Bypass -File .\\scripts\\build-installer.ps1"
+    "installer:build": "npm run electron:package"
   },
   "build": {
     "appId": "com.drekogames.launcher",
