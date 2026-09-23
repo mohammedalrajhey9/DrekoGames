@@ -9,6 +9,29 @@ let updateState = {
   error: '',
 }
 
+const sanitizeUpdateError = (error) => {
+  const raw = error && (error.message || String(error)) ? (error.message || String(error)) : ''
+  if (!raw) return 'Update check failed. Please try again later.'
+
+  if (/Cannot parse releases feed/i.test(raw)) {
+    return 'GitHub release feed could not be parsed. Please check the release configuration or try again later.'
+  }
+
+  if (/ECONNRESET|ENOTFOUND|ETIMEDOUT|TIMEOUT|Failed to fetch|NetworkError|fetch/i.test(raw)) {
+    return 'Unable to reach the update server. Please try again later.'
+  }
+
+  if (/404|Not Found|404 Not Found/i.test(raw)) {
+    return 'The update release was not found on GitHub.'
+  }
+
+  if (raw.length > 220) {
+    return `${raw.slice(0, 220).trim()}…`
+  }
+
+  return raw
+}
+
 const setUpdateState = (next) => {
   updateState = { ...updateState, ...next }
 }
@@ -47,7 +70,7 @@ const setupAutoUpdater = (mainWindow) => {
   })
 
   autoUpdater.on('error', (error) => {
-    setUpdateState({ checking: false, available: false, downloaded: false, error: error?.message || 'Update check failed' })
+    setUpdateState({ checking: false, available: false, downloaded: false, error: sanitizeUpdateError(error) })
     sendStatus(mainWindow)
   })
 
@@ -82,7 +105,7 @@ const setupAutoUpdater = (mainWindow) => {
   })
 
   autoUpdater.checkForUpdatesAndNotify().catch((error) => {
-    setUpdateState({ checking: false, available: false, downloaded: false, error: error?.message || 'Update check failed' })
+    setUpdateState({ checking: false, available: false, downloaded: false, error: sanitizeUpdateError(error) })
     sendStatus(mainWindow)
   })
 }

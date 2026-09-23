@@ -4573,7 +4573,7 @@ const App: React.FC = () => {
                 )}
 
                 {updateStatus.error && (
-                  <div className="mb-2 text-xs text-[#ffb3b3]">{updateStatus.error}</div>
+                  <div className="mb-2 max-w-full overflow-hidden text-xs text-[#ffb3b3] break-words">{updateStatus.error}</div>
                 )}
 
                 {updateStatus.checking || updateProgress.percent > 0 ? (

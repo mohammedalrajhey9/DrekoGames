@@ -1,7 +1,7 @@
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path -Parent $PSScriptRoot
 $makensis = 'C:\Users\Administrator\AppData\Local\electron-builder\Cache\nsis-3.0.4.1\nsis-3.0.4.1-1mx3n\Bin\makensis.exe'
-$scriptPath = Join-Path $projectRoot 'build\installer.nsi'
+$scriptPath = Join-Path $projectRoot 'installer\installer.nsi'
 $releaseDir = Join-Path $projectRoot 'release'
 $outputFile = Join-Path $releaseDir 'Dreko Games Launcher Setup.exe'
 

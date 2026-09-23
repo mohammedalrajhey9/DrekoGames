@@ -1,7 +1,7 @@
 {
   "name": "drekogames-launcher",
   "private": true,
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Dreko Games Launcher - desktop game hub and installer",
   "author": {
     "name": "Dreko Games",
@@ -56,15 +56,6 @@
       ],
       "icon": "src/assets/icon.ico",
       "artifactName": "Dreko Games Launcher.${ext}"
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true,
-      "installerIcon": "build/icon.ico",
-      "installerHeader": "build/installer-header.bmp",
-      "installerHeaderIcon": "build/icon.ico"
     },
     "publish": {
       "provider": "github",
