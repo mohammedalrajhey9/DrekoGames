@@ -43,12 +43,15 @@ jobs:
 
           gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --title "$TAG" --notes "Auto-generated release for $TAG"
 
-          ASSET_LIST="$(find release -maxdepth 1 -type f \( -name '*Setup*.exe' -o -name 'latest.yml' \) | tr '\n' ' ')"
-          echo "Uploading installer files: $ASSET_LIST"
+          mapfile -d '' ASSETS < <(find release -maxdepth 1 -type f \( -iname '*setup*.exe' -o -iname 'latest.yml' \) -print0)
 
-          if [ -z "$ASSET_LIST" ]; then
+          if [ "${#ASSETS[@]}" -eq 0 ]; then
             echo "No installer assets were found in release/"
+            find release -maxdepth 2 -type f | sort || true
             exit 1
           fi
 
-          gh release upload "$TAG" $ASSET_LIST --clobber
+          for asset in "${ASSETS[@]}"; do
+            echo "Uploading $asset"
+            gh release upload "$TAG" "$asset" --clobber
+          done
