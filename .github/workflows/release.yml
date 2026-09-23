@@ -43,4 +43,12 @@ jobs:
 
           gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --title "$TAG" --notes "Auto-generated release for $TAG"
 
-          gh release upload "$TAG" release/**/* --clobber
+          ASSET_LIST="$(find release -maxdepth 1 -type f \( -name '*Setup*.exe' -o -name 'latest.yml' \) | tr '\n' ' ')"
+          echo "Uploading installer files: $ASSET_LIST"
+
+          if [ -z "$ASSET_LIST" ]; then
+            echo "No installer assets were found in release/"
+            exit 1
+          fi
+
+          gh release upload "$TAG" $ASSET_LIST --clobber

@@ -51,11 +51,10 @@
     ],
     "win": {
       "target": [
-        "nsis",
-        "portable"
+        "nsis"
       ],
       "icon": "src/assets/icon.ico",
-      "artifactName": "Dreko Games Launcher.${ext}"
+      "artifactName": "Dreko Games Launcher Setup.${ext}"
     },
     "publish": {
       "provider": "github",
